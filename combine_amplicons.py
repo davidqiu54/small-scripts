@@ -1,17 +1,18 @@
 # ProfileSmoosher
 #
-# This is a script to combine shape data from multiple amplicons from a single target into one shape profile
+# This is a script to combine shape data from multiple amplicons from a single
+# target into one shape profile
 #
 # It takes a single reference fasta and multiple SHAPE profile.txt files
-# After sequence identities are confirmed, new _profile.txt file will be populated:
-#     For modified and untreated samples, mutation counts, read depth, and effective depth will be summed
-#     New profiles will be calculated from these counts and plotted in the same manner as shapemapper.py
+# After sequence identities are confirmed, new profile.txt file will be writen:
+#     For modified and untreated samples, counts and depths will be summed.
+#     New profiles will be calculated from these counts.
 #
-#
-import os, sys
+import sys
 from argparse import ArgumentParser
 import re
 import numpy as np
+
 
 def parseFasta(fasta=None):
     """
@@ -34,9 +35,10 @@ def parseFasta(fasta=None):
                 sys.exit("fasta sequence is formatted incorrectly")
     return seqs
 
+
 def makeNewProfile(seq_dict=None,
-    profiles=None,
-    **kwargs):
+                   profiles=None,
+                   **kwargs):
     """
 
     """
@@ -49,19 +51,19 @@ def makeNewProfile(seq_dict=None,
     else:
         sys.exit("seq_dict does not contain just 1 sequence")
     # initiate a new_profile and populate the sequence and nucleotide fields
-    profile_types = np.dtype([('nuc','i4'),('seq','S1'),
-        ('mod_muts','i4'),('mod_depth','i4'),
-        ('mod_effdepth','i4'),('mod_rate','f8'),
-        ('unt_muts','i4'),('unt_depth','i4'),
-        ('unt_effdepth','i4'),('unt_rate','f8'),
-        ('den_muts','i4'),('den_depth','i4'),
-        ('den_effdepth','i4'),('den_rate','f8'),
-        ('prof','f8'),('stderr','f8'),
-        ('HQprof','f8'),('HQstderr','f8'),
-        ('norm_prof','f8'),('norm_stderr','f8')])
+    profile_types = np.dtype([('nuc', 'i4'), ('seq', 'S1'),
+                              ('mod_muts', 'i4'), ('mod_depth', 'i4'),
+                              ('mod_effdepth', 'i4'), ('mod_rate', 'f8'),
+                              ('unt_muts', 'i4'), ('unt_depth', 'i4'),
+                              ('unt_effdepth', 'i4'), ('unt_rate', 'f8'),
+                              ('den_muts', 'i4'), ('den_depth', 'i4'),
+                              ('den_effdepth', 'i4'), ('den_rate', 'f8'),
+                              ('prof', 'f8'), ('stderr', 'f8'),
+                              ('HQprof', 'f8'), ('HQstderr', 'f8'),
+                              ('norm_prof', 'f8'), ('norm_stderr', 'f8')])
     new = np.zeros(seq_len, dtype=profile_types)
     new['seq'] = [nt for nt in seq]
-    new['nuc'] = np.arange(1,len(seq)+1)
+    new['nuc'] = np.arange(1, len(seq) + 1)
     # for each profile, find the unique start site
     # add counts to new where appropriate
     for prof in profiles:
@@ -72,37 +74,38 @@ def makeNewProfile(seq_dict=None,
         # add current profile to new
         not_nans = np.logical_not(np.isnan(profile['HQprof']))
         ref_index = np.zeros(seq_len, dtype=bool)
-        ref_index[start:start+sub_len] += not_nans
-        fields = ['mod_muts','mod_depth','mod_effdepth',
-            'unt_muts','unt_depth','unt_effdepth']
+        ref_index[start:start + sub_len] += not_nans
+        fields = ['mod_muts', 'mod_depth', 'mod_effdepth',
+                  'unt_muts', 'unt_depth', 'unt_effdepth']
         for field in fields:
             new[field][ref_index] += profile[field][not_nans]
     # compute the mutation rates
-    new['mod_rate'] = new['mod_muts'].astype('f8')/new['mod_effdepth']
-    new['unt_rate'] = new['unt_muts'].astype('f8')/new['unt_effdepth']
-    new['den_rate'] = new['den_muts'].astype('f8')/new['den_effdepth']
+    new['mod_rate'] = new['mod_muts'].astype('f8') / new['mod_effdepth']
+    new['unt_rate'] = new['unt_muts'].astype('f8') / new['unt_effdepth']
+    new['den_rate'] = new['den_muts'].astype('f8') / new['den_effdepth']
     # compute prof and standard error
-    new['prof'] = new['mod_rate']-new['unt_rate']
-    Modified_err = (new['mod_rate']/new['mod_effdepth'])**0.5
-    Untreated_err = (new['unt_rate']/new['unt_effdepth'])**0.5
-    new['stderr'] = (Modified_err**2+Untreated_err**2)**0.5
+    new['prof'] = new['mod_rate'] - new['unt_rate']
+    Modified_err = (new['mod_rate'] / new['mod_effdepth'])**0.5
+    Untreated_err = (new['unt_rate'] / new['unt_effdepth'])**0.5
+    new['stderr'] = (Modified_err**2 + Untreated_err**2)**0.5
     # compute HQprof and HQstderr, for now equal to prof and stderr
     new['HQprof'] = new['prof']
     new['HQstderr'] = new['stderr']
     # compute normalized profile and stderr
     ignore_nans = np.logical_not(np.isnan(new['prof']))
-    norm_factor = 0.5/(np.median(new['prof'][ignore_nans]))
-    new['norm_prof'][ignore_nans] = new['HQprof'][ignore_nans]*norm_factor
-    new['norm_stderr'][ignore_nans] = new['HQstderr'][ignore_nans]*norm_factor
+    norm_factor = 0.5 / (np.median(new['prof'][ignore_nans]))
+    new['norm_prof'][ignore_nans] = new['HQprof'][ignore_nans] * norm_factor
+    new['norm_stderr'][ignore_nans] = new['HQstderr'][ignore_nans] * norm_factor
     # write new profile out to profile.txt
     filename = '{0}_concat_profile.txt'.format(seq_name)
     field_names = '\t'.join(new.dtype.names)
     np.savetxt(filename, new, delimiter='\t', header=field_names,
-        fmt=['%.1i','%.1s','%.1i','%.1i','%.1i','%.6f',
-        '%.1i','%.1i','%.1i','%.6f','%.1i','%.1i','%.1i',
-        '%.6f','%.6f','%.6f','%.6f','%.6f','%.6f','%.6f'])
+               fmt=['%.1i', '%.1s', '%.1i', '%.1i', '%.1i', '%.6f',
+                    '%.1i', '%.1i', '%.1i', '%.6f', '%.1i', '%.1i', '%.1i',
+                    '%.6f', '%.6f', '%.6f', '%.6f', '%.6f', '%.6f', '%.6f'])
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     ap = ArgumentParser(description="Combine amplicons into one profile.txt")
     ap.add_argument("fasta", metavar="reference fasta", type=str,
                     help="filename of input reference fasta file")
