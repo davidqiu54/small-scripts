@@ -500,8 +500,8 @@ def drawBases(varna):
 				#color the nucleotide letter Brown
 				line += '<text x="%s" y="%s" text-anchor="middle" font-family="Arial" font-size="18" fill="rgb(%s)" >%s</text>\n' % (bases[i][1][0],bases[i][1][1],'153,76,0',bases[i][0])							
 			else:
-				line += '<text x="%s" y="%s" text-anchor="middle" font-family="Arial" font-size="18" fill="rgb(%s)" >%s</text>\n' % (bases[i][1][0],bases[i][1][1],'0,0,0',bases[i][0])
-				#line += '<text x="%s" y="%s" text-anchor="middle" font-family="Arial" font-size="18" fill="rgb(%s)" >%s</text>\n' % (bases[i][1][0],bases[i][1][1],getSHAPEcolor(shape[i]),bases[i][0])
+				#line += '<text x="%s" y="%s" text-anchor="middle" font-family="Arial" font-size="18" fill="rgb(%s)" >%s</text>\n' % (bases[i][1][0],bases[i][1][1],'0,0,0',bases[i][0])
+				line += '<text x="%s" y="%s" text-anchor="middle" font-family="Arial" font-size="18" fill="rgb(%s)" >%s</text>\n' % (bases[i][1][0],bases[i][1][1],getSHAPEcolor(shape[i]),bases[i][0])
 	return line
 			
 
