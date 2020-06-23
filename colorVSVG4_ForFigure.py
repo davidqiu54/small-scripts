@@ -76,7 +76,9 @@ class structureCoords:
 		self.numMap = self.baseMap
 		#self.center = self.pairMap #bad idea here, center stores the location of the center of the helix
 		self.diff = False
+		self.dms = False
 		self.customColors = False
+		self.ntFont = 16
 		
 		#object variables to keep track of which lines are being drawn and 
 		#the cutoffs to use
@@ -458,6 +460,13 @@ def getSHAPEcolor(x):
 	if 0.85 >= x >0.4:return '255,164,26'
 	if 0.4 >= x > -4: return '1,0,0'
 
+def getDMScolor(x):
+	if x < -4: return '180,180,180'
+	if x > 0.4: return '255,0,0'
+	#if 0.85 >= x >0.4:return '255,210,0'
+	if 0.4>= x >0.2:return '255,164,26'
+	if 0.2 >= x > -4: return '1,0,0'
+
 def getDiffcolor(x):
 	if x < -500:return '160,160,160'
 	elif x <= -0.3:return '41,171,226'
@@ -476,6 +485,9 @@ def drawBases(varna):
 			else:
 				#line += '<text x="%s" y="%s" text-anchor="middle" font-family="Sans-Serif" font-weight="bold" font-size="18" fill="rgb(%s)" >%s</text>' % (bases[i][1][0],bases[i][1][1],getDiffcolor(shape[i]),bases[i][0])
 				line += '<text x="%s" y="%s" text-anchor="middle" font-weight="bold" font-size="18" fill="rgb(%s)" >%s</text>' % (bases[i][1][0],bases[i][1][1],getDiffcolor(shape[i]),bases[i][0])
+	elif varna.dms:
+		for i in range(len(bases)):
+			line += '<text x="%s" y="%s" text-anchor="middle" font-weight="bold" font-size="18" fill="rgb(%s)" >%s</text>' % (bases[i][1][0],bases[i][1][1],getDMScolor(shape[i]),bases[i][0])		
 	else:
 		for i in range(len(bases)):
 			#line += '<text x="%s" y="%s" text-anchor="middle" font-family="Sans-Serif" font-size="18" fill="rgb(%s)" >%s</text>\n' % (bases[i][1][0],bases[i][1][1],getSHAPEcolor(shape[i]),bases[i][0])
@@ -1141,18 +1153,20 @@ def parseArgs():
 	prs.add_argument('-x','--xrna',action='store_true',default=False,help='changes input file type to XRNA')
 	prs.add_argument('-e','--enzyme',action='store',type=str,help='draw enzymatic cleavage data from file')
 	prs.add_argument('-d','--diff',action='store_true',default=False,help='changes chemical probing type to differential, coloring cutoffs +=0.3')
-	prs.add_argument('-c','--colors',action='store',type=str,help='color behind nucs with custom colors. 0 for white, 1 for red, 2 for grey.')
+	prs.add_argument('-c','--colors',action='store',type=str,help='color behind nucs with custom colors. 0 for white, 1 for red, 2 for grey, 3 for blue, 4 for orange, 5 for purple, 6 for black.')
 	prs.add_argument('-l','--lines',action='store',type=str,help='draw additional lines between certain nucs')
 	prs.add_argument('-p','--percentileLines',action='store',type=str,help='similar to lines, but only draws lines above the given percentiles. Takes in a 4 column format file.')
 	prs.add_argument('-r','--rawCountLines',action='store',type=str,help='similar to lines, but only draws lines for the top x rates. Can take in multiple counts and color them separately. Takes in a 4 column format file.')	
 	prs.add_argument('-cl','--categoryLines',action='store',type=str,help='similar to lines, but only draws lines above a given percentile. Also takes in a 5 column file where the 5th column is numbered 0 to 2 and corresponds to how each line shall be colored.')
 	prs.add_argument('--distanceLines',action='store',type=str,help="similar to lines but takes in: 4 column deletion file, pdb, and percentile cutoff. Draws lines of all deletions above the percentile and colors them by 3D distance.")
+	prs.add_argument("--centralPoint",action='store_true',default=False,help="Rather than calculating distances between hydroxyl groups, calculate between central point of the base. Use in conjunction with distanceLines.")	
 	prs.add_argument('-s','--shape',action='store',type=str,help='overide stored chemical probing values from varna')
+	prs.add_argument('--dms',action='store',type=str,help='similar to the shape option. But sets color limits to 0.2 and 0.4')
 	prs.add_argument('-o','--offset', action='store',type=int,default=0,help='numbering ofset, adds this to the numbering in the file')
 	prs.add_argument('--offsetStart',action='store',type=int,default=1,help='Only add the offset to this nucleotide and beyond')
 	prs.add_argument('-n','--nonCanonicalPairs',action='store',type=str,help='input a 2 column list of non canonical base pairs. Will plot circles on top of pair lines to denote non canonical pairing.')
 	prs.add_argument('--switch',action='store_true',default=False,help='reverse the pairing coloring scheme')
-	prs.add_argument("--centralPoint",action='store_true',default=False,help="Rather than calculating distances between hydroxyl groups, calculate between central point of the base. Use in conjunction with distanceLines.")
+	prs.add_argument('-f','--ntFontSize',action='store',type=int,default=16,help="Set the font size for all nucleotides. Default value is 16.")
 	o=prs.parse_args()
 	return o
 
@@ -1222,12 +1236,17 @@ if __name__ == '__main__':
 	#overwrite stored chemical probing values
 	if arg.shape:
 		svgStruct.readSHAPE(arg.shape)
+	if arg.dms:
+		svgStruct.readSHAPE(arg.dms)
+		svgStruct.dms = True
 	if arg.diff:
 		svgStruct.diff = True
 
 	# do custom colors if given
 	if arg.colors:
 		svgStruct.readColors(arg.colors)
+	#set a custom font size for nucleotides
+	svgStruct.ntFont = arg.ntFontSize
 
 	#draw non canonical pairs 
 	if arg.nonCanonicalPairs:
