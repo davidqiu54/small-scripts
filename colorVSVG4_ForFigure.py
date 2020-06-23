@@ -481,27 +481,27 @@ def drawBases(varna):
 		for i in range(len(bases)):
 			if abs(shape[i])>0.3 and shape[i] >-500:
 				#line += '<text x="%s" y="%s" text-anchor="middle" font-family="Sans-Serif" font-weight="bold" font-size="19" stroke="rgb(%s)" fill="rgb(%s)" >%s</text>' % (bases[i][1][0],bases[i][1][1],getDiffcolor(shape[i]),getDiffcolor(shape[i]),bases[i][0])
-				line += '<text x="%s" y="%s" text-anchor="middle" font-weight="bold" font-size="19" stroke="rgb(%s)" fill="rgb(%s)" >%s</text>' % (bases[i][1][0],bases[i][1][1],getDiffcolor(shape[i]),getDiffcolor(shape[i]),bases[i][0])
+				line += '<text x="%s" y="%s" text-anchor="middle" font-weight="bold" font-size="%s" stroke="rgb(%s)" fill="rgb(%s)" >%s</text>' % (bases[i][1][0],bases[i][1][1],varna.ntFont,getDiffcolor(shape[i]),getDiffcolor(shape[i]),bases[i][0])
 			else:
 				#line += '<text x="%s" y="%s" text-anchor="middle" font-family="Sans-Serif" font-weight="bold" font-size="18" fill="rgb(%s)" >%s</text>' % (bases[i][1][0],bases[i][1][1],getDiffcolor(shape[i]),bases[i][0])
-				line += '<text x="%s" y="%s" text-anchor="middle" font-weight="bold" font-size="18" fill="rgb(%s)" >%s</text>' % (bases[i][1][0],bases[i][1][1],getDiffcolor(shape[i]),bases[i][0])
+				line += '<text x="%s" y="%s" text-anchor="middle" font-weight="bold" font-size="%s" fill="rgb(%s)" >%s</text>' % (bases[i][1][0],bases[i][1][1],varna.ntFont,getDiffcolor(shape[i]),bases[i][0])
 	elif varna.dms:
 		for i in range(len(bases)):
-			line += '<text x="%s" y="%s" text-anchor="middle" font-weight="bold" font-size="18" fill="rgb(%s)" >%s</text>' % (bases[i][1][0],bases[i][1][1],getDMScolor(shape[i]),bases[i][0])		
+			line += '<text x="%s" y="%s" text-anchor="middle" font-weight="bold" font-size="%s" fill="rgb(%s)" >%s</text>' % (bases[i][1][0],bases[i][1][1],varna.ntFont,getDMScolor(shape[i]),bases[i][0])		
 	else:
 		for i in range(len(bases)):
 			#line += '<text x="%s" y="%s" text-anchor="middle" font-family="Sans-Serif" font-size="18" fill="rgb(%s)" >%s</text>\n' % (bases[i][1][0],bases[i][1][1],getSHAPEcolor(shape[i]),bases[i][0])
 			if varna.colorIDs[i] == 6 or varna.colorIDs[i] == 3:
-				line += '<text x="%s" y="%s" text-anchor="middle" font-family="Arial" font-size="18" fill="rgb(%s)" >%s</text>\n' % (bases[i][1][0],bases[i][1][1],'256,256,256',bases[i][0])
+				line += '<text x="%s" y="%s" text-anchor="middle" font-family="Arial" font-size="%s" fill="rgb(%s)" >%s</text>\n' % (bases[i][1][0],bases[i][1][1],varna.ntFont,'256,256,256',bases[i][0])
 			elif varna.colorIDs[i] == -1:
 				#color the nucleotide letter Grey
-				line += '<text x="%s" y="%s" text-anchor="middle" font-family="Arial" font-size="18" fill="rgb(%s)" >%s</text>\n' % (bases[i][1][0],bases[i][1][1],'128,128,128',bases[i][0])				
+				line += '<text x="%s" y="%s" text-anchor="middle" font-family="Arial" font-size="%s" fill="rgb(%s)" >%s</text>\n' % (bases[i][1][0],bases[i][1][1],varna.ntFont,'128,128,128',bases[i][0])				
 			elif varna.colorIDs[i] == -2:
 				#color the nucleotide letter Brown
-				line += '<text x="%s" y="%s" text-anchor="middle" font-family="Arial" font-size="18" fill="rgb(%s)" >%s</text>\n' % (bases[i][1][0],bases[i][1][1],'153,76,0',bases[i][0])							
+				line += '<text x="%s" y="%s" text-anchor="middle" font-family="Arial" font-size="%s" fill="rgb(%s)" >%s</text>\n' % (bases[i][1][0],bases[i][1][1],varna.ntFont,'153,76,0',bases[i][0])							
 			else:
 				#line += '<text x="%s" y="%s" text-anchor="middle" font-family="Arial" font-size="18" fill="rgb(%s)" >%s</text>\n' % (bases[i][1][0],bases[i][1][1],'0,0,0',bases[i][0])
-				line += '<text x="%s" y="%s" text-anchor="middle" font-family="Arial" font-size="18" fill="rgb(%s)" >%s</text>\n' % (bases[i][1][0],bases[i][1][1],getSHAPEcolor(shape[i]),bases[i][0])
+				line += '<text x="%s" y="%s" text-anchor="middle" font-family="Arial" font-size="%s" fill="rgb(%s)" >%s</text>\n' % (bases[i][1][0],bases[i][1][1],varna.ntFont,getSHAPEcolor(shape[i]),bases[i][0])
 	return line
 			
 
@@ -1167,6 +1167,7 @@ def parseArgs():
 	prs.add_argument('-n','--nonCanonicalPairs',action='store',type=str,help='input a 2 column list of non canonical base pairs. Will plot circles on top of pair lines to denote non canonical pairing.')
 	prs.add_argument('--switch',action='store_true',default=False,help='reverse the pairing coloring scheme')
 	prs.add_argument('-f','--ntFontSize',action='store',type=int,default=16,help="Set the font size for all nucleotides. Default value is 16.")
+	prs.add_argument('--hideNtNums',action='store_true',help="Hide the nucleotide numbering.")
 	o=prs.parse_args()
 	return o
 
@@ -1310,7 +1311,10 @@ if __name__ == '__main__':
 	#letters = drawBases(svgStruct) + drawNums(svgStruct,arg.offset,arg.offsetStart)
 	
 	#don't draw nums
-	letters = drawBases(svgStruct)
+	if arg.hideNtNums:
+		letters = drawBases(svgStruct)
+	else:
+		letters = drawBases(svgStruct) + drawNums(svgStruct,arg.offset,arg.offsetStart)
 	
 	if arg.enzyme:
 		arrows = enzyme.drawArrows(svgStruct)
