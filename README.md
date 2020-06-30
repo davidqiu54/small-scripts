@@ -34,3 +34,17 @@ __Example__
 python combine_amplicons.py reference.fa --profiles 1_profile.txt 2_profile.txt
 ```
 This command would create one new file, reference_concat_profile.txt, with combined data from each of the profiles, in this case 1 and 2.
+
+
+For make histograms of mutations per molecule:
+----------------------------------------------
+*countMutsPerMol.py*
+
+This script will take mutation strings files from ShapeMapper_v1.2, and create a histogram plot of the number of mutations per molecule.
+
+__Example__
+```
+python countMutsPerMol.py -n -o output.pdf example_mutation_strings.txt
+```
+This command would create one new file, output.pdf, that contains a histogram of the number of mutations per molecule.
+
