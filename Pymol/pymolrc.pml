@@ -1,10 +1,13 @@
 # Created by: Seth Veenbaas
-# Last date modified: 11/19/21
+# Last date modified: 05/03/22
 
 
 #### Startup settings ####
 # set size of PYMOL window on boot
 viewport 1500, 1000
+
+# enable multi-thread processing
+set max_threads, 4
 
 # change backround color
 bg_color white
@@ -27,6 +30,12 @@ set solvent_radius, 1.6
 set transparency, 0.5
 set surface_color, grey80
 
+# settings related to rendering meshes
+set mesh_quality, 2
+set mesh_type, 0
+set mesh_width, 0.5
+set mesh_radius, 0.015
+
 # orthoscopic turns on and off the perspective handling
 set orthoscopic, off
 
@@ -37,8 +46,8 @@ set orthoscopic, off
 # Sets RNA cartoon style, removes ions and water, colors RNA lightteal and ligand brightorange.
 alias rna, set cartoon_ring_mode, 3; set cartoon_ring_finder, 1; remove resn hoh; remove inorganic and not resn STP; cartoon oval; set cartoon_oval_length, 0.75; set cartoon_oval_width, 0.25; color lightteal, (polymer); color brightorange, organic; remove (byres polymer & name CA)
 
-# RNA cartoon command + center
-alias rna_c, rna; center
+# RNA cartoon command + extract ligand as an object
+alias rna_o, rna; extract Ligand, organic; util.cbao (organic)
 
 # RNA cartoon command + colors proeteins lightpink instead of removing.
 alias rna_protein, set cartoon_ring_mode, 3; set cartoon_ring_finder, 1; remove resn hoh; remove inorganic and not resn STP; cartoon oval; set cartoon_oval_length, 0.75; set cartoon_oval_width, 0.25; color lightteal, (polymer); color brightorange, organic; color lightpink, (byres polymer & name CA)
@@ -81,7 +90,8 @@ alias sort_pockets, extract Protein_Pockets, byresidue resn STP within 4 of (byr
 
 # a-sphere appearence command
 # Creates selections to group a-spheres by pockets and colors them.
-alias fpocket, stored.list=[]; stored.b_list=[]; cmd.iterate("(resn STP)","stored.list.append(resi)"); cmd.iterate("(resn STP)","stored.b_list.append(b -2)"); lastSTP=stored.list[-1]; hide lines, resn STP; for my_index in range(1,int(lastSTP)+1): cmd.select("pocket"+str(my_index), "resn STP and resi "+str(my_index)); for my_index in range(2,int(lastSTP)+1): cmd.color(my_index,"pocket"+str(my_index));cmd.color(13,"pocket1"); for my_index in range(2,int(lastSTP)+1): cmd.show("spheres","pocket"+str(my_index)); for my_index in range(1,int(lastSTP)+1): cmd.set("sphere_scale", stored.b_list[my_index], "resn STP and resi "+str(my_index))
+alias fpocket, stored.list=[]; stored.b_list=[]; cmd.iterate("(resn STP)","stored.list.append(resi)"); cmd.iterate("(resn STP)","stored.b_list.append(b -2)"); lastSTP=stored.list[-1]; hide lines, resn STP; for my_index in range(1,int(lastSTP)+1): cmd.select("pocket"+str(my_index), "resn STP and resi "+str(my_index)); for my_index in range(2,int(lastSTP)+1): cmd.color(my_index,"pocket"+str(my_index));cmd.color(13,"pocket1"); for my_index in range(2,int(lastSTP)+1): cmd.show("spheres","pocket"+str(my_index)); for my_index in range(1,int(lastSTP)+1): cmd.set("sphere_scale", stored.b_list[my_index], "resn STP and resi "+str(my_index)); for my_index in range(1,int(lastSTP)+1): cmd.set("sphere_transparency","0.0","pocket"+str(my_index))
+
 
 # a-sphere appearence command with transparent a-spheres 
 # NOTE: Ray tracing will not be able to render transparent surfaces if they are located behind a surface.
