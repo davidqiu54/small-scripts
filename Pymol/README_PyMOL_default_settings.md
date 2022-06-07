@@ -20,8 +20,8 @@ Custom default settings and alias are stored in a pymol configuration file title
 
 
 
-**Unix/Linux Users:**
-> 1. Open your terminal and type `nano ~/.pymolrc`.
+**Mac/Unix/Linux Users:**
+> 1. Open your terminal and type `nano ~/.pymolrc` or `vim ~/.pymolrc`.
 > 2. This will open your *pymolrc.pml* file using nano for you to make edits.
 > 3. Add desired comands and aliases to file and save. 
 >> **If you plan to use the Weeks lab's default *pymolrc.pml* file:**  
