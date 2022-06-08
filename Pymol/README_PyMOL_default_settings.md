@@ -1,93 +1,195 @@
 # PYMOL DEFAULT SETTINGS AND ALIASES GUIDE
 
-This tutorial will instruct you on how to:
-1. Create/edit your *pymolrc* file required for making default settings and aliases in Pymol.
-2. Write an basic alias for your custom use case.
+### Custom default settings and aliases (custom functions) for PyMOL are stored in a configuration file titled pymolrc. The pymolrc file will initalize everytime you start PyMOL to incorrporate your custom setting automatically.  
 
-______
+### This tutorial will cover:
 
-## QUICK SET-UP: Create your own pymolrc file
+1. How to customize your PyMOL pymolrc file with default settings and/or aliases.
+2. What to include in your PyMOL pymolrc file
+3. How to write an basic PyMOL alias (custom function).
+4. Example pymolrc files
 
-Custom default settings and alias are stored in a pymol configuration file titled *pymolc.pml* and can be edited using the instructions below.
+# 1. Edit your pymolrc file
 
-**Windows Users:**
-> 1. Open command prompt window and type `notepad "%HOMEDRIVE%%HOMEPATH%\pymolrc.pml"`.
-> 2. This will open your *pymolrc.pml* file using notepad for you to make edits.
-> 3. Add desired comands and aliases to file and save.
->> **If you plan to use the Weeks lab's default *pymolrc.pml* file:**
->> - Copy the contents of the *pymolrc.pml* file from the Weeks-UNC/small-scripts/Pymol github directory.  
->> - Paste the contents of the *pymolrc.pml* file into your open notepad file and save.
+## QUICK SET-UP: Edit your pymolrc file in PyMOL
 
+1. Open a window of PyMOL and choose, **File > Edit pymolrc**
+2. Add desired comands and aliases to file and save.  
 
+    **If you plan to use the Weeks lab's default *pymolrc.pml* file:**
+    - Copy the contents of the pymolrc.pml file from the Weeks-UNC/small-scripts/Pymol github directory.
+    - Paste the contents of the pymolrc.pml file into your open notepad file and save.
 
-**Mac/Unix/Linux Users:**
-> 1. Open your terminal and type `nano ~/.pymolrc` or `vim ~/.pymolrc`.
-> 2. This will open your *pymolrc.pml* file using nano for you to make edits.
-> 3. Add desired comands and aliases to file and save. 
->> **If you plan to use the Weeks lab's default *pymolrc.pml* file:**  
->> - Copy the contents of the *pymolrc.pml* file from the Weeks-UNC/small-scripts/Pymol github directory.  
->> - Paste the contents of the *pymolrc.pml* file into your open nano session and save.
-	
+## ADVANCED SET-UP: Edit your pymolrc file within the command line
+
+### WINDOWS USERS:
+1. Open command prompt window and paste
+    > notepad "%HOMEDRIVE%%HOMEPATH%\pymolrc.pml"
+2. This will open your pymolrc.pml file using notepad allowing you to make edits.
+3. Add desired commands and aliases to file and save.  
+
+    **If you plan to use the Weeks lab's default *pymolrc.pml* file:**
+    - Copy the contents of the pymolrc.pml file from the Weeks-UNC/small-scripts/Pymol github directory.  
+    - Paste the contents of the pymolrc.pml file into your open notepad file and save.
+
+### MAC/LINUX USERS:
+1. Open your terminal and type  
+    > nano ~/.pymolrc
+
+    or (depending on your preference)
+
+    > vim ~/.pymolrc
+2. This will open your pymolrc.pml file in your perfered text editor allowing you to make edits.
+3. Add desired comands and aliases to file and save. 
+
+    **If you plan to use the Weeks lab's default pymolrc.pml file:**  
+    - Copy the contents of the pymolrc.pml file from the Weeks-UNC/small-scripts/Pymol github directory.  
+    - Paste the contents of the pymolrc.pml file into your open nano session and save.
+
+### MULTIPLE PYMOLRC FILES:
+
+PyMOL will even load multiple pymolrc files, however only from the same directory.  
+You can have multiple scripts: e.g. pymolrc-settings.pml and pymolrc-misc.pml in your home directory.
+
+- pymolrc-settings.pml can e.g. be used to define 'permanent' custom Settings that you rarely change
+- pymolrc-misc.pml can e.g. be used to define more transient custom Settings, such as Working Directory or Fetch Path
+
+You can query which pymolrc files have been loaded:
+
+> PyMOL> print invocation.options.deferred
+
 **NOTE:** You do NOT need to use the PYMOL API format in pymolrc.pml files.
 
+# 2. What to include in your pymolrc file
 
-## BASIC RECOMENDED SETTINGS
-    
-    # Change backround color to white for easier viewing.
-    bg_color white
+### Your pymolrc file should contain settings that you always apply to your PyMOL sessions. 
+### Examples:
 
-    # Enable multi-thread processing for faster ray trace processing.
-    set max_threads, 4
+- ### Apply basic settings to PyMOL 
 
-    # Display sequence viewer.
-    set seq_view, 1
+      # Change backround color to white for easier viewing.
+      bg_color white
 
-    # Sets specular reflection intensity to lowwer value for aesthetics. 
-    set specular, 0.1
+      # Display sequence viewer.
+      set seq_view, 1
 
-    # Removes distracing shadows from ray-traced images.
-    set ray_shadows, off
+      # Toggles whether PyMOL loops movies.
+      set movie_loop, 1
 
-    # Improves antiliasing/edge smoothing for ray-traced images.
-    set antialias, 2
+      # Save fetched PDB files here.
+      set fetch_path, /your/fetch/path
+
+- ### Apply consistent styles
+        
+      # Adjust the thickness of atomic bonds viewed as sticks.
+      set stick_radius, 0.3
+
+      # Adjust the radius of spheres.
+      set sphere_scale, 1
+
+      # Settings related to surface features.
+      set surface_quality, 1
+      set solvent_radius, 1.6
+      set transparency, 0.5
+      set surface_color, grey80
+
+      # Settings related to labels.
+      set label_size, 60
+      set label_outline_color, 1
+      set label_color, 0
+      set label_position, [0, 0, 10]
+        
+- ### Apply raytrace settings
+
+      # Enable multi-thread processing for faster ray trace processing.
+      set max_threads, 4
+
+      # Sets specular reflection intensity to lowwer value for aesthetics. 
+      set specular, 0.1
+
+      # Removes distracing shadows from ray-traced images.
+      set ray_shadows, off
+
+      # Improves antiliasing/edge smoothing for ray-traced images.
+      set antialias, 2
+
+- ### Apply aliases (custom function)
+
+      Adding an alias (custom function) to your pymolrc file will ensure that it can be used by default anytime you use PyMOL.  
+      Creating an alias is covered below in section 3.
 
 
 Read more at: https://pymolwiki.org/index.php/Pymolrc
 
-_______
+# 3. Create your own PyMOL alias
 
-## ADVANCED: Create your own alias
+**alias** allows you to bind a commonly used command (or series of commands) to a single PyMOL keyword of your choice.  
+In essence, aliases allow you to add customized functions to PyMOL.
 
-**alias** allows you to bind a commonly used command (or series of commands) to a single PyMOL keyword of your choice.    
+## USAGE
+ 
+> PyMOL> alias *name*, *command-sequence*
 
-### USAGE
-> alias *name*, *command-sequence*
+alias: name of the PyMOL command for creating a new alias.  
+*name*: name of your new custom function.  
+*command-sequence*: list of your desired PyMOL> command line commands. 
 
-### EXAMPLES
+## EXAMPLES
 
-Alias called "remove_protein" which removes all amino acid residues.
+### Aliases can be used to simplify a commonly used command or series of commands into a single function name.
+    
+- remove_protein: alias which removes all amino acid residues.
+    > PyMOL> alias remove_protein, remove (byres polymer & name CA)
 
-> alias remove_protein, remove (byres polymer & name CA)
+- ligand: alias which shows organic ligands as wires and colors them by element (orange).
 
-Alias called "ligand" which shows organic ligands as wires and colors them by element (orange).
+    > PyMOL> alias ligand, show wire, organic; util.cbao (organic)
 
-> alias ligand, show wire, organic; util.cbao (organic)
+### Aliases are speficically useful for consistantly applying style settings for publication.
 
-Alias called "rna" which implements a cartoon style for RNAs.
-        
-> alias rna, set cartoon_ring_mode, 3; set cartoon_ring_finder, 1; remove resn hoh; remove inorganic and not resn STP; cartoon oval; set cartoon_oval_length, 0.75; set cartoon_oval_width, 0.25; color lightteal, (polymer); color brightorange, organic; remove (byres polymer & name CA)
+- rna: alias which implements a cartoon style for RNAs.
+    > PyMOL> alias rna, set cartoon_ring_mode, 3; set cartoon_ring_finder, 1; remove resn hoh; remove inorganic and not resn STP; cartoon oval; set cartoon_oval_length, 0.75; set cartoon_oval_width, 0.25; color lightteal, (polymer); color brightorange, organic; remove (byres polymer & name CA)
 
-### NOTES
+## NOTES
 
 Multiple commands should be seperated by a semi-colon.
 
-After defining an alias, you can implement the command-sequence linked to your alias simply by entering the alias name into the PyMOL command line.
+After defining an alias, you can implement your alias simply by entering the alias name into the PyMOL> command line.
 	
 Read more at: https://pymolwiki.org/index.php/Alias
 
----------------
+# 4. Example pymolrc files
 
-## EXAMPLE: pymolrc.pml files
+### From https://pymolwiki.org/index.php/Pymolrc
+
+    # simple test: change background color of PyMOL window
+    bg blue
+
+    # this will run the script in the specified location
+    run /path/to/home/pymol/load_sep.py
+
+    # your favorite settings
+    set movie_loop, 0
+    set two_sided_lighting, 1
+
+    set label_size, 60
+    set label_outline_color, 1
+    set label_color, 0
+    set label_position, [0, 0, 10]
+
+    # for images:
+    #   antialias =1 smooths jagged edges, 0 turns it off
+    set antialias, 1
+
+    #   stick_radius -adjust thickness of atomic bonds
+    set stick_radius, 0.3
+
+    # save fetched PDB files here
+    set fetch_path, /your/fetch/path
+
+    # Personal short-cut to color_obj function
+    import color_obj
+    cmd.extend("co",color_obj.color_obj)
 
 ### From https://betainverse.wordpress.com/2017/04/14/pymol-default-settings-pymolrc/
 
@@ -105,7 +207,6 @@ Read more at: https://pymolwiki.org/index.php/Alias
     run /home/edmonds/scripts/pymolscripts/data2bfactor.py
     run /home/edmonds/scripts/pymolscripts/spectrumany.py
     
-	
 ### From http://pldserver1.biochem.queensu.ca/~rlc/work/pymol/
 
     # use white background
