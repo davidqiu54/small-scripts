@@ -115,8 +115,8 @@ You can query which pymolrc files have been loaded:
 
 - ### Apply aliases (custom function)
 
-      Adding an alias (custom function) to your pymolrc file will ensure that it can be used by default anytime you use PyMOL.  
-      Creating an alias is covered below in section 3.
+    Adding an alias (custom function) to your pymolrc file will ensure that it can be used by default anytime you use PyMOL.  
+    Creating an alias is covered below in section 3.
 
 
 Read more at: https://pymolwiki.org/index.php/Pymolrc
