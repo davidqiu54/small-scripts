@@ -151,9 +151,9 @@ alias: name of the PyMOL command for creating a new alias.
     > PyMOL> alias rna, set cartoon_ring_mode, 3; set cartoon_ring_finder, 1; remove resn hoh; remove inorganic and not resn STP; cartoon oval; set cartoon_oval_length, 0.75; set cartoon_oval_width, 0.25; color lightteal, (polymer); color brightorange, organic; remove (byres polymer & name CA)
 
 <p float="left">
-  <img src="https://github.com/Weeks-UNC/small-scripts/blob/master/Pymol/Images/3E5C_RNA_Default_Style.png?raw=true" width="400" />
-  <img src="https://github.com/Weeks-UNC/small-scripts/blob/master/Pymol/Images/3E5C_RNA_rna_Style.png?raw=true" width="400" /> 
-  <img src="https://github.com/Weeks-UNC/small-scripts/blob/master/Pymol/Images/3E5C_RNA_rna_s_ligand_Style.png?raw=true" width="400" />
+  <img src="https://github.com/Weeks-UNC/small-scripts/blob/master/Pymol/Images/3E5C_RNA_Default_Style.png?raw=true" width="200" />
+  <img src="https://github.com/Weeks-UNC/small-scripts/blob/master/Pymol/Images/3E5C_RNA_rna_Style.png?raw=true" width="200" /> 
+  <img src="https://github.com/Weeks-UNC/small-scripts/blob/master/Pymol/Images/3E5C_RNA_rna_s_ligand_Style.png?raw=true" width="200" />
 </p>
 
 
