@@ -151,7 +151,7 @@ alias: name of the PyMOL command for creating a new alias.
     > PyMOL> alias rna, set cartoon_ring_mode, 3; set cartoon_ring_finder, 1; remove resn hoh; remove inorganic and not resn STP; cartoon oval; set cartoon_oval_length, 0.75; set cartoon_oval_width, 0.25; color lightteal, (polymer); color brightorange, organic; remove (byres polymer & name CA)
 
 - rna_surface: alias which implements a cartoon style and surface for RNAs.
-    > PyMOL> alias rna_surface, set cartoon_ring_mode, 3; set cartoon_ring_finder, 1; remove resn hoh; remove inorganic and not resn STP; cartoon oval; set cartoon_oval_length, 0.75; set cartoon_oval_width, 0.25; color lightteal, (polymer); util.cbao (organic); remove (byres polymer & name CA); show surface
+    > PyMOL> alias rna_surface, set cartoon_ring_mode, 3; set cartoon_ring_finder, 1; remove resn hoh; remove inorganic and not resn STP; cartoon oval; set cartoon_oval_length, 0.75; set cartoon_oval_width, 0.25; color lightteal, (polymer); util.cbao (organic); remove (byres polymer & name CA); show surface; set transparency, 0.5
 
 
 |Style: PyMOL Default|Style: rna Alias|Style: rna_surface Alias|
