@@ -152,8 +152,11 @@ alias: name of the PyMOL command for creating a new alias.
 
 <p float="left">
   <img src="https://github.com/Weeks-UNC/small-scripts/blob/master/Pymol/Images/3E5C_RNA_Default_Style.png?raw=true" width="200" />
-  <img src="https://github.com/Weeks-UNC/small-scripts/blob/master/Pymol/Images/3E5C_RNA_rna_Style.png?raw=true" width="200" /> 
-  <img src="https://github.com/Weeks-UNC/small-scripts/blob/master/Pymol/Images/3E5C_RNA_rna_s_ligand_Style.png?raw=true" width="200" />
+  <img src="https://github.com/Weeks-UNC/small-scripts/blob/master/Pymol/Images/3E5C_RNA_rna_Style.png?raw=true" width="200" />  
+  <img src="https://github.com/Weeks-UNC/small-scripts/blob/master/Pymol/Images/3E5C_RNA_rna_s_ligand_Style.png?raw=true" width="400" /> 
+  
+ 
+  
 </p>
 
 
